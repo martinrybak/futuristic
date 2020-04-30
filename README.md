@@ -120,6 +120,6 @@ class MyScreen extends StatelessWidget {
 }
 ```
 
-The optional `onError` callback can be used to handle the error event, such as showing the user an alert dialog. It can be used in place of or together with the `errorBuilder`. A `retry` function is provided as a parameter that can be called to "retry" the `Future`. 
+The optional `onError` callback can be used to handle the error event, such as displaying an alert dialog or performing navigation. It can be used in place of or together with the `errorBuilder`. A `retry` function is provided as a parameter that can be called to "retry" the `Future`. 
 
-The optional `onData` callback can be used to handle a successful result, such as navigating to a success page. This can be used in place of or together with the `dataBuilder`.
+The optional `onData` callback can be used to handle a successful result, such as displaying an alert dialog or performing navigation. This can be used in place of or together with the `dataBuilder`.
