@@ -75,7 +75,7 @@ Future<int> myFuture(int first, int second) async {
   return first + second;
 }
 
-class Home extends StatelessWidget {
+class MyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Futuristic(
@@ -106,7 +106,7 @@ Future<int> myFuture(int first, int second) async {
   return first + second;
 }
 
-class Home extends StatelessWidget {
+class MyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Futuristic(
