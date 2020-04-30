@@ -4,7 +4,7 @@ Makes it possible to safely execute and retry a `Future` inside a StatelessWidge
 
 ![](screenshot.png)
 
-## The Problem
+## Problem
 
 If you've ever tried to use the `FutureBuilder` widget in Flutter, you've probably been surprised by its behavior. When used inside a `StatelessWidget`, **it will re-execute its `Future` every time it is rebuilt**. Since a widget can be rebuilt many times in Flutter (including due to hot reload), this can be undesirable if our `Future` calls a non-idempotent REST API endpoint, for example.
 
@@ -51,6 +51,8 @@ class _HomeState extends State<Home> {
 }
 ```
 
+## Solution
+
 The problem with `FutureBuilder` is, ironically, that it takes a `Future` instance as its input. Instead, the `Futuristic` widget takes a `Function` that *returns* a `Future`. This means:
 
 * It can be used in a `StatelessWidget`.
@@ -61,9 +63,9 @@ Additionally, `Futuristic` provides:
 * Multiple builder callbacks to provide `initial/busy/data/error` widget states.
 * `onData/onError` callbacks to perform additional actions when a `Future` completes.
 
-## Usage
-
 You can use the `Futuristic` widget to wrap a single component like a button, or an entire screen. Note that the `futureBuilder` parameter takes a `Function` that *returns* a `Future`. This give us the ability to start (or retry) our future as needed. Best of all, we can go back to using a regular `StatelessWidget`.
+
+## Usage
 
 ### Button example
 
