@@ -1,8 +1,8 @@
 name: futuristic
-description: A new Flutter package project.
+description: Makes it possible to execute and retry a Future inside a StatelessWidget.
 version: 0.0.1
-author:
-homepage:
+author: Martin Rybak <martin.rybak@gmail.com>
+homepage: https://github.com/vgventures/futuristic
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
