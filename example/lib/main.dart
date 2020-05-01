@@ -62,7 +62,7 @@ class Home extends StatelessWidget {
 class GoodButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Futuristic(
+    return Futuristic<int>(
       futureBuilder: () => goodFuture(1, 2),
       initialBuilder: (_, start) => RaisedButton(child: Text('Good button example'), onPressed: start),
       busyBuilder: (_) => CircularProgressIndicator(),
@@ -74,7 +74,7 @@ class GoodButton extends StatelessWidget {
 class BadButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Futuristic(
+    return Futuristic<int>(
       futureBuilder: () => badFuture(1, 2),
       initialBuilder: (_, start) => RaisedButton(child: Text('Bad button example'), onPressed: start),
       busyBuilder: (_) => CircularProgressIndicator(),
@@ -90,7 +90,7 @@ class GoodScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Good screen')),
       body: Center(
-        child: Futuristic(
+        child: Futuristic<int>(
           autoStart: true,
           futureBuilder: () => goodFuture(1, 2),
           busyBuilder: (_) => CircularProgressIndicator(),
@@ -108,7 +108,7 @@ class BadScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Bad screen')),
       body: Center(
-        child: Futuristic(
+        child: Futuristic<int>(
           autoStart: true,
           futureBuilder: () => badFuture(1, 2),
           busyBuilder: (_) => CircularProgressIndicator(),

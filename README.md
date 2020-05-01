@@ -80,7 +80,7 @@ Future<int> myFuture(int first, int second) async {
 class MyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Futuristic(
+    return Futuristic<int>(
       futureBuilder: () => myFuture(1, 2),
       initialBuilder: (context, start) => RaisedButton(child: Text('Go'), onPressed: start),
       busyBuilder: (context) => CircularProgressIndicator(),
@@ -111,7 +111,7 @@ Future<int> myFuture(int first, int second) async {
 class MyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Futuristic(
+    return Futuristic<int>(
       autoStart: true,
       futureBuilder: () => myFuture(1, 2),
       busyBuilder: (context) => CircularProgressIndicator(),
