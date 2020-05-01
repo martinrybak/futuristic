@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:futuristic/futuristic.dart';
 
+// ignore_for_file: missing_required_param
+
 void main() {
   group('Constructor', () {
     testWidgets('throws assertion error if futureBuilder is null', (tester) async {
@@ -49,7 +51,6 @@ void main() {
     });
 
     testWidgets('shows default busy widget after invoking start and busyBuilder is null', (tester) async {
-      final text = 'busy';
       final widget = MaterialApp(
         home: Futuristic(
           futureBuilder: () => goodFuture(),
