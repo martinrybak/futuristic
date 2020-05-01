@@ -22,7 +22,7 @@ class Home extends StatelessWidget {
 }
 ```
 
-To only execute our `Future` only once, we could use a `StatefulWidget`, but now we have the extra boilerplate of using a `StatefulWidget` and holding onto our `Future` in a state variable.
+To execute our `Future` only once, we could use a `StatefulWidget`, but now we have the extra boilerplate of using a `StatefulWidget` and holding onto our `Future` in a state variable.
 
 ```
 class Home extends StatefulWidget {
@@ -53,23 +53,24 @@ class _HomeState extends State<Home> {
 
 ## Solution
 
-The problem with `FutureBuilder` is, ironically, that it takes a `Future` instance as its input. Instead, the `Futuristic` widget takes a `Function` that *returns* a `Future`. This means:
+The problem with `FutureBuilder` is, ironically, that it takes a `Future` instance as its input. Instead, the `Futuristic` widget takes a `Function` that *returns* a `Future` and holds onto it in its own `State`. This means:
 
 * It can be used in a `StatelessWidget`.
 * It can let child widgets **start** or **retry** a `Future`.
 
 Additionally, `Futuristic` provides:
 
-* Multiple builder callbacks to provide `initial/busy/data/error` widget states.
-* `onData/onError` callbacks to perform additional actions when a `Future` completes.
-
-You can use the `Futuristic` widget to wrap a single component like a button, or an entire screen. Note that the `futureBuilder` parameter takes a `Function` that *returns* a `Future`. This give us the ability to start (or retry) our future as needed. Best of all, we can go back to using a regular `StatelessWidget`.
+* Multiple builder callbacks to provide mutually exclusive `initial/busy/data/error` widget states.
+* Optional `onData/onError` callbacks to perform additional actions when a `Future` succeeds or fails.
+* Generic type safety for the `data` provided to callbacks. The type parameter `<T>` can be omitted if it can be inferred from the `futureBuilder` function.
 
 ## Usage
 
+We can use the `Futuristic` widget to wrap a single component like a button, or even an entire screen.
+
 ### Button example
 
-To start executing a `Future` in response to a button press, call the `start` parameter in the `initialBuilder` callback. For example, in a button widget's `onPressed` handler:
+To start executing a `Future` in response to a button press, connect its `onPressed` handler to the `start` function provided in the `initialBuilder` callback.
 
 ```
 Future<int> myFuture(int first, int second) async {
@@ -95,11 +96,11 @@ The optional `busyBuilder` displays a widget when the `Future` is busy executing
 
 The optional `errorBuilder` displays a widget when the `Future` has failed with an `Error` or `Exception`. This is provided as a parameter, together with a `retry` function that can be called to "retry" the `Future`.
 
-The optional `dataBuilder` displays a widget when the `Future` has succeded. The resulting value of the `Future` is provided as a parameter to the callback. Note that this will be `null` in the case of a `Future<void>`.
+The optional `dataBuilder` displays a widget when the `Future` has succeded. The resulting `T` value of the `Future<T>` is provided as a parameter to the callback. Note that this will be `null` in the case of a `Future<void>`.
 
 ### Screen example
 
-To automatically start executing a `Future` upon navigating to a screen, set the `autoStart` parameter to `true` instead of providing an `initialBuilder`. The `busyBuilder` will immediately display.
+To automatically start executing a `Future` upon navigating to a screen, set the `autoStart` parameter to `true` instead of providing an `initialBuilder`. The `busyBuilder` will be displayed immediately.
 
 ```
 Future<int> myFuture(int first, int second) async {
