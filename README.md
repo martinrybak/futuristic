@@ -92,7 +92,7 @@ class MyButton extends StatelessWidget {
 }
 ```
 
-The optional `busyBuilder` displays a widget when the `Future` is busy executing. By default, it shows a `CircularProgressIndicator`. By displaying this, we inform the user that the operation is in progress and also prevent the `Future` from being triggered twice accidentally. 
+The optional `busyBuilder` displays a widget when the `Future` is busy executing. By default, it shows a centered `CircularProgressIndicator`. By displaying this, we inform the user that the operation is in progress and also prevent the `Future` from being triggered twice accidentally. 
 
 The optional `errorBuilder` displays a widget when the `Future` has failed with an `Error` or `Exception`. This is provided as a parameter, together with a `retry` function that can be called to "retry" the `Future`.
 
@@ -105,7 +105,7 @@ To automatically start executing a `Future` upon navigating to a screen, set the
 ```
 Future<int> myFuture(int first, int second) async {
   await Future.delayed(const Duration(seconds: 1));
-  throw Exception('some shit happened');
+  throw Exception('something happened');
   return first + second;
 }
 
@@ -123,6 +123,6 @@ class MyScreen extends StatelessWidget {
 }
 ```
 
-The optional `onError` callback can be used to handle the error event, such as displaying an alert dialog or sending to a logging provider. It can be used in place of or together with the `errorBuilder`. A `retry` function is provided as a parameter that can be called to "retry" the `Future`. 
+The optional `onError` callback can be used to handle the error event, such as displaying an alert dialog or sending to a logging provider. It can be used in place of or together with the `errorBuilder`. A `retry` function is provided as a parameter that can be called to "retry" the `Future`. Be careful not to call `retry` without user interaction to avoid creating an infinite loop.
 
 The optional `onData` callback can be used to handle a successful result, such as displaying an alert dialog or performing navigation. This can be used in place of or together with the `dataBuilder`.
