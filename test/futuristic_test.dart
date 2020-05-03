@@ -168,7 +168,6 @@ void main() {
   group('Callbacks', () {
     testWidgets('onDone called after future completes successfully', (tester) async {
       final expected = 'data';
-      String actual;
       final widget = MaterialApp(
         home: Futuristic(
           futureBuilder: () => goodFuture(expected),
@@ -176,16 +175,14 @@ void main() {
             WidgetsBinding.instance.addPostFrameCallback((_) => start());
             return Container();
           },
-          onData: expectAsync1((data) => actual = data),
+          onData: expectAsync1((data) => expect(data, expected)),
         ),
       );
       await tester.pumpWidget(widget);
-      expectLater(actual, expected);
     });
 
     testWidgets('onError called after future fails with error', (tester) async {
       final expected = 'error';
-      String actual;
       final widget = MaterialApp(
         home: Futuristic(
           futureBuilder: () => badFuture(expected),
@@ -193,11 +190,10 @@ void main() {
             WidgetsBinding.instance.addPostFrameCallback((_) => start());
             return Container();
           },
-          onError: expectAsync2((error, _) => actual = error),
+          onError: expectAsync2((error, _) => expect(error, expected)),
         ),
       );
       await tester.pumpWidget(widget);
-      expectLater(actual, expected);
     });
   });
 }
