@@ -91,10 +91,13 @@ class MyButton extends StatelessWidget {
   }
 }
 ```
+The `futureBuilder` parameter is required.
+
+The `initialBuilder` parameter is required if `autoStart` is false (see example below).
 
 The optional `busyBuilder` displays a widget when the `Future` is busy executing. By default, it shows a centered `CircularProgressIndicator`. By displaying this, we inform the user that the operation is in progress and also prevent the `Future` from being triggered twice accidentally. 
 
-The optional `errorBuilder` displays a widget when the `Future` has failed with an `Error` or `Exception`. This is provided as a parameter, together with a `retry` function that can be called to "retry" the `Future`.
+The optional `errorBuilder` displays a widget when the `Future` has failed, typically with an `Error` or `Exception`. This is provided as a parameter, together with a `retry` function that can be called to "retry" the `Future`.
 
 The optional `dataBuilder` displays a widget when the `Future` has succeded. The resulting `T` value of the `Future<T>` is provided as a parameter to the callback. Note that this will be `null` in the case of a `Future<void>`.
 
@@ -123,6 +126,8 @@ class MyScreen extends StatelessWidget {
 }
 ```
 
-The optional `onError` callback can be used to handle the error event, such as displaying an alert dialog or sending to a logging provider. It can be used in place of or together with the `errorBuilder`. A `retry` function is provided as a parameter that can be called to "retry" the `Future`. Be careful not to call `retry` without user interaction to avoid creating an infinite loop.
+The `futureBuilder` parameter is required.
 
-The optional `onData` callback can be used to handle a successful result, such as displaying an alert dialog or performing navigation. This can be used in place of or together with the `dataBuilder`.
+The optional `onError` callback can be used to handle the error event by displaying an alert dialog or sending to a logging provider, for example. It can be used in place of or together with the `errorBuilder`. A `retry` function is provided as a parameter that can be called to "retry" the `Future`. Be careful not to call `retry` without user interaction to avoid creating an infinite loop. This callback will **not** be retriggered as a result of a widget rebuild.
+
+The optional `onData` callback can be used to handle a successful result by displaying an alert dialog or performing navigation. for example. This can be used in place of or together with the `dataBuilder`. This callback will **not** be retriggered as a result of a widget rebuild.
