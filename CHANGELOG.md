@@ -1,3 +1,7 @@
+## 0.1.3
+
+* Added link to futuristic
+
 ## 0.1.2
 
 * Added pedantic
