@@ -1,6 +1,6 @@
 name: futuristic
 description: Makes it possible to safely execute and retry a Future inside a StatelessWidget.
-version: 0.1.1
+version: 0.1.2
 author: Martin Rybak <martin.rybak@gmail.com>
 homepage: https://github.com/vgventures/futuristic
 
