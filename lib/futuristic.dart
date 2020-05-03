@@ -75,7 +75,7 @@ class _FuturisticState<T> extends State<Futuristic<T>> {
       builder: (_context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
-            return widget.initialBuilder(context, _execute);
+            return _handleInitial(_context);
           case ConnectionState.waiting:
           case ConnectionState.active:
             return _handleBusy(_context);
@@ -86,6 +86,13 @@ class _FuturisticState<T> extends State<Futuristic<T>> {
         }
       },
     );
+  }
+
+  Widget _handleInitial(BuildContext context) {
+    if (widget.initialBuilder != null) {
+      return widget.initialBuilder(context, _execute);
+    }
+    return _defaultWidget();
   }
 
   Widget _handleSnapshot(BuildContext context, AsyncSnapshot<T> snapshot) {
@@ -99,25 +106,14 @@ class _FuturisticState<T> extends State<Futuristic<T>> {
     if (widget.errorBuilder != null) {
       return widget.errorBuilder(context, error, _execute);
     }
-
-    if (widget.initialBuilder != null) {
-      return widget.initialBuilder(context, _execute);
-    }
-
-    return _defaultWidget();
+    return _handleInitial(context);
   }
 
   Widget _handleData(BuildContext context, T data) {
     if (widget.dataBuilder != null) {
       return widget.dataBuilder(context, data);
     }
-
-    if (widget.initialBuilder != null) {
-      return widget.initialBuilder(context, _execute);
-    }
-
-    return _defaultWidget();
-
+    return _handleInitial(context);
   }
 
   Widget _handleBusy(BuildContext context) {
