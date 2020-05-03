@@ -4,6 +4,8 @@ Makes it possible to safely execute and retry a `Future` inside a StatelessWidge
 
 ![](screenshot.png)
 
+See the [Mainstream](https://pub.dev/packages/mainstream) package for a similar API for working with `Streams`.
+
 ## Problem
 
 If you've ever tried to use the `FutureBuilder` widget in Flutter, you've probably been surprised by its behavior. When used inside a `StatelessWidget`, **it will re-execute its `Future` every time it is rebuilt**. Since a widget can be rebuilt many times in Flutter (including due to hot reload), this can be undesirable if our `Future` calls a non-idempotent REST API endpoint, for example.
