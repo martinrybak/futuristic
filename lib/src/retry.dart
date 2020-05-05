@@ -3,7 +3,7 @@ enum Backoff {
   exponential,
 }
 
-/// Helper class for retrying a [Future] according to several parameters.
+/// Helper class for retrying a [Future] with customizable options.
 class Retry<T> {
   /// Number of times to retry. Defaults to 3.
   final int repeat;
@@ -24,18 +24,18 @@ class Retry<T> {
     this.filter,
   });
 
-  Retry copyWith({int repeat, Duration delay}) {
+  Retry next() {
     return Retry(
-      repeat: repeat ?? this.repeat,
-      delay: delay ?? this.delay,
+      repeat: repeat - 1,
+      delay: backoff == Backoff.exponential ? delay * 2 : delay,
       backoff: backoff,
       filter: filter,
     );
   }
 
-  /// Executes [future] and if an error is thrown, asks [filter] whether to retry.
+  /// Executes [future] and if [retry] is not null, retries when an error is thrown.
   /// Retries [repeat] times after a [delay] increasing according to [backoff].
-  /// If an exception is still caught at this point, rethrows.
+  /// If an error is still caught at this point, rethrows.
   static Future<T> execute<T>(Future<T> future, Retry retry, Function(Object, Duration, int) onRetry) async {
     assert(future != null);
 
@@ -48,14 +48,7 @@ class Retry<T> {
           onRetry(e, retry.delay, retry.repeat - 1);
         }
         await Future.delayed(retry.delay);
-        return await execute(
-          future,
-          retry.copyWith(
-            repeat: retry.repeat - 1,
-            delay: retry.backoff == Backoff.exponential ? retry.delay * 2 : retry.delay,
-          ),
-          onRetry,
-        );
+        return await execute(future, retry.next(), onRetry);
       } else {
         rethrow;
       }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:futuristic/futuristic.dart';
 
-/// A widget that makes it easy to execute a [Future] from a StatelessWidget.
+/// A widget that makes it possible to safely execute and retry a [Future] inside a [StatelessWidget].
 class Futuristic<T> extends StatefulWidget {
   /// Function that returns the [Future] to execute. Not the [Future] itself.
   final AsyncValueGetter<T> futureBuilder;
@@ -12,7 +12,7 @@ class Futuristic<T> extends StatefulWidget {
   /// Whether to immediately begin executing the [Future]. If true, [initialBuilder] must be null.
   final bool autoStart;
 
-  /// Retry strategy for re-executing the [Future] if it completes with an error.
+  /// Retry strategy for automatically re-executing the [Future] if it completes with an error.
   final Retry retry;
 
   /// Widget to display before the [Future] starts executing.
@@ -43,7 +43,7 @@ class Futuristic<T> extends StatefulWidget {
   /// Call [VoidCallback] to start executing the [Future] again.
   final Function(Object, VoidCallback) onError;
 
-  /// Callback to invoke when a [Future] is retried after an error.
+  /// Callback to invoke when a [Future] is automatically retried after an error.
   /// If not null, [retry] must be not null.
   final Function(Object, Duration, int) onRetry;
 
