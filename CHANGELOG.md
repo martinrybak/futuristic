@@ -1,3 +1,9 @@
+## 0.2.0
+
+* Added autoRetry
+* Readme copy updates
+* Example project updates
+
 ## 0.1.3
 
 * Added link to futuristic
