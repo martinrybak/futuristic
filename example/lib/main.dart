@@ -40,6 +40,7 @@ class Home extends StatelessWidget {
           children: <Widget>[
             Container(height: 50, child: Center(child: GoodButton())),
             Container(height: 50, child: Center(child: BadButton())),
+            Container(height: 50, child: Center(child: BadButtonRetry())),
             RaisedButton(
               child: Text('Good screen example'),
               onPressed: () {
@@ -79,6 +80,23 @@ class BadButton extends StatelessWidget {
       initialBuilder: (_, start) => RaisedButton(child: Text('Bad button example'), onPressed: start),
       busyBuilder: (_) => CircularProgressIndicator(),
       errorBuilder: (_, error, retry) => RaisedButton(child: Text('Sorry! Try again'), onPressed: retry),
+    );
+  }
+}
+
+class BadButtonRetry extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Futuristic<int>(
+      futureBuilder: () => badFuture(1, 2),
+      retry: Retry(repeat: 3, backoff: Backoff.exponential),
+      initialBuilder: (_, start) => RaisedButton(child: Text('Bad button with auto retry'), onPressed: start),
+      busyBuilder: (_) => CircularProgressIndicator(),
+      onRetry: (error, delay, remaining) {
+        final message = 'Retrying in ${delay.inMilliseconds}ms with $remaining attempts left.';
+        final snackBar = SnackBar(duration: Duration(milliseconds: 500), content: Text(message));
+        Scaffold.of(context).showSnackBar(snackBar);
+      },
     );
   }
 }
