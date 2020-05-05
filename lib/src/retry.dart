@@ -3,6 +3,7 @@ enum Backoff {
   exponential,
 }
 
+/// Helper class for retrying a [Future] according to several parameters.
 class Retry<T> {
   /// Number of times to retry. Defaults to 3.
   final int repeat;
