@@ -55,7 +55,7 @@ class _HomeState extends State<Home> {
 
 ## Solution
 
-The problem with `FutureBuilder` is, ironically, that it takes a `Future` instance as its input. Instead, the `Futuristic` widget takes a `Function` that *returns* a `Future` and holds onto it in its own `State`. This means:
+The problem with `FutureBuilder` is, ironically, that it takes a `Future` instance as its input. As soon as a `Future` function is invoked, it starts executing. Instead, the `Futuristic` widget takes a `Function` that *returns* a `Future` and holds onto it in its own `State`. This means:
 
 * It can be used in a `StatelessWidget`.
 * It can let child widgets **start** or **retry** a `Future`.
@@ -63,7 +63,8 @@ The problem with `FutureBuilder` is, ironically, that it takes a `Future` instan
 Additionally, `Futuristic` provides:
 
 * Multiple builder callbacks to provide mutually exclusive `initial/busy/data/error` widget states.
-* Optional `onData/onError` callbacks to perform additional actions when a `Future` succeeds or fails.
+* Optional automatic retry with customizable repeat count, delay, and backoff type.
+* Optional `onData/onError/onRetry` callbacks to perform additional actions when a `Future` succeeds, fails, or auto-retries.
 * Generic type safety for the `data` provided to callbacks. The type parameter `<T>` can be omitted if it can be inferred from the `futureBuilder` function.
 
 ## Usage
@@ -86,6 +87,7 @@ class MyButton extends StatelessWidget {
     return Futuristic<int>(
       futureBuilder: () => myFuture(1, 2),
       initialBuilder: (context, start) => RaisedButton(child: Text('Go'), onPressed: start),
+      autoRetry: Retry(repeat: 3, filter: (e) => e is TimeoutException),
       busyBuilder: (context) => CircularProgressIndicator(),
       errorBuilder: (context, error, retry) => RaisedButton(child: Text('Oops'), onPressed: retry),
       dataBuilder: (context, data) => Text(data.toString()),
@@ -97,9 +99,11 @@ The `futureBuilder` parameter is required.
 
 The `initialBuilder` parameter is required if `autoStart` is false (see example below).
 
+The optional `autoRetry` parameter take a `Retry` instance that tells `Futuristic` how to automatically retry the `Future` in case of a failure. `repeat` is the number of times to retry, `delay` is how long to wait between retries, `backoff` is `linear`/`exponential`, and `filter` is a function that controls whether an error should be retried.
+
 The optional `busyBuilder` displays a widget when the `Future` is busy executing. By default, it shows a centered `CircularProgressIndicator`. By displaying this, we inform the user that the operation is in progress and also prevent the `Future` from being triggered twice accidentally. 
 
-The optional `errorBuilder` displays a widget when the `Future` has failed, typically with an `Error` or `Exception`. This is provided as a parameter, together with a `retry` function that can be called to "retry" the `Future`.
+The optional `errorBuilder` displays a widget when the `Future` has failed, typically with an `Error` or `Exception`. This is provided as a parameter, together with a `retry` function that can be called to "retry" the `Future`. If `autoRetry` is used, this will be called after the final error.
 
 The optional `dataBuilder` displays a widget when the `Future` has succeded. The resulting `T` value of the `Future<T>` is provided as a parameter to the callback. Note that this will be `null` in the case of a `Future<void>`.
 
@@ -119,10 +123,12 @@ class MyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Futuristic<int>(
       autoStart: true,
+      autoRetry: Retry(),
       futureBuilder: () => myFuture(1, 2),
       busyBuilder: (context) => CircularProgressIndicator(),
       onError: (error, retry) => showDialog(...),
       onData: (data) => showDialog(...),
+      onRetry: (error, delay, remaining) => log(...),
     );
   }
 }
@@ -133,3 +139,5 @@ The `futureBuilder` parameter is required.
 The optional `onError` callback can be used to handle the error event by displaying an alert dialog or sending to a logging provider, for example. It can be used in place of or together with the `errorBuilder`. A `retry` function is provided as a parameter that can be called to "retry" the `Future`. Be careful not to call `retry` without user interaction to avoid creating an infinite loop. This callback will **not** be retriggered as a result of a widget rebuild.
 
 The optional `onData` callback can be used to handle a successful result by displaying an alert dialog or performing navigation. for example. This can be used in place of or together with the `dataBuilder`. This callback will **not** be retriggered as a result of a widget rebuild.
+
+The optional `onRetry` callback is called every time the `Future` is automatically retried, and can be used for logging purposes. The `error` parameter contains the error object, the `delay` parameter contains the `Duration` until the next try, and the `remaining` parameter contains the number of tries remaining. Can only be used if `autoRetry` is true.
