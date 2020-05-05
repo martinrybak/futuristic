@@ -32,8 +32,8 @@ class Retry<T> {
     );
   }
 
-  /// Executes [future] and if an error is thrown, asks [retry].[filter] whether to continue.
-  /// Retries [retry].[repeat] times after a [retry].[delay] increasing according to [retry].[backoff].
+  /// Executes [future] and if an error is thrown, asks [filter] whether to retry.
+  /// Retries [repeat] times after a [delay] increasing according to [backoff].
   /// If an exception is still caught at this point, rethrows.
   static Future<T> execute<T>(Future<T> future, Retry retry, Function(Object, Duration, int) onRetry) async {
     assert(future != null);

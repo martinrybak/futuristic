@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:futuristic/futuristic.dart';
 
 /// A widget that makes it easy to execute a [Future] from a StatelessWidget.
 class Futuristic<T> extends StatefulWidget {
