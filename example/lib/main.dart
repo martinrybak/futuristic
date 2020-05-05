@@ -89,7 +89,7 @@ class BadButtonRetry extends StatelessWidget {
   Widget build(BuildContext context) {
     return Futuristic<int>(
       futureBuilder: () => badFuture(1, 2),
-      retry: Retry(repeat: 3, backoff: Backoff.exponential),
+      retry: const Retry(repeat: 3, backoff: Backoff.exponential),
       initialBuilder: (_, start) => RaisedButton(child: Text('Bad button with auto retry'), onPressed: start),
       busyBuilder: (_) => CircularProgressIndicator(),
       onRetry: (error, delay, remaining) {

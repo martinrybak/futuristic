@@ -16,12 +16,12 @@ class Retry<T> {
   /// Whether to retry given the caught error (usually an [Error] or [Exception]). Defaults to true.
   final bool Function(Object) filter;
 
-  Retry({
+  const Retry({
     this.repeat = 3,
     this.delay = const Duration(seconds: 1),
     this.backoff = Backoff.linear,
-    bool Function(Object) filter,
-  }) : filter = filter ?? ((e) => true);
+    this.filter,
+  });
 
   Retry copyWith({int repeat, Duration delay}) {
     return Retry(
@@ -41,7 +41,8 @@ class Retry<T> {
     try {
       return await future;
     } catch (e) {
-      if (retry != null && retry.repeat > 0 && retry.filter(e)) {
+      final filter = retry.filter ?? (_) => true;
+      if (retry != null && retry.repeat > 0 && filter(e)) {
         if (onRetry != null) {
           onRetry(e, retry.delay, retry.repeat - 1);
         }
