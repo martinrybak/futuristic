@@ -13,7 +13,7 @@ class Futuristic<T> extends StatefulWidget {
   final bool autoStart;
 
   /// Retry strategy for automatically re-executing the [Future] if it completes with an error.
-  final Retry retry;
+  final Retry autoRetry;
 
   /// Widget to display before the [Future] starts executing.
   /// Call [VoidCallback] to start executing the [Future].
@@ -44,14 +44,14 @@ class Futuristic<T> extends StatefulWidget {
   final Function(Object, VoidCallback) onError;
 
   /// Callback to invoke when a [Future] is automatically retried after an error.
-  /// If not null, [retry] must be not null.
+  /// If not null, [autoRetry] must be not null.
   final Function(Object, Duration, int) onRetry;
 
   const Futuristic({
     Key key,
     @required this.futureBuilder,
     this.autoStart = false,
-    this.retry,
+    this.autoRetry,
     this.initialBuilder,
     this.busyBuilder,
     this.errorBuilder,
@@ -61,7 +61,7 @@ class Futuristic<T> extends StatefulWidget {
     this.onRetry,
   })  : assert(futureBuilder != null),
         assert(autoStart ^ (initialBuilder != null)),
-        assert(onRetry == null || (onRetry != null && retry != null)),
+        assert(onRetry == null || (onRetry != null && autoRetry != null)),
         super(key: key);
 
   @override
@@ -136,7 +136,7 @@ class _FuturisticState<T> extends State<Futuristic<T>> {
 
   void _execute() {
     setState(() {
-      _future = Retry.execute<T>(widget.futureBuilder(), widget.retry, widget.onRetry);
+      _future = Retry.execute<T>(widget.futureBuilder(), widget.autoRetry, widget.onRetry);
       _future.then(_onData).catchError(_onError);
     });
   }
