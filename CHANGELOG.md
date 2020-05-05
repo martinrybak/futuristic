@@ -6,7 +6,7 @@
 
 ## 0.1.3
 
-* Added link to futuristic
+* Added link to mainstream
 
 ## 0.1.2
 
