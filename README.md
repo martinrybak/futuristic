@@ -29,7 +29,7 @@ To execute our `Future` only once, we could use a `StatefulWidget`, but now we h
 ```
 class Home extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
