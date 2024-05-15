@@ -1,3 +1,8 @@
+## 0.2.0
+
+* Added null safety
+* Replaced pedantic package with flutter_lints
+
 ## 0.1.3
 
 * Added link to futuristic
