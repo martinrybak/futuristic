@@ -40,13 +40,13 @@ class Home extends StatelessWidget {
           children: <Widget>[
             Container(height: 50, child: Center(child: GoodButton())),
             Container(height: 50, child: Center(child: BadButton())),
-            RaisedButton(
+            TextButton(
               child: Text('Good screen example'),
               onPressed: () {
                 Navigator.of(context).pushNamed(GoodScreen.routeName);
               },
             ),
-            RaisedButton(
+            TextButton(
               child: Text('Bad screen example'),
               onPressed: () {
                 Navigator.of(context).pushNamed(BadScreen.routeName);
@@ -64,7 +64,7 @@ class GoodButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Futuristic<int>(
       futureBuilder: () => goodFuture(1, 2),
-      initialBuilder: (_, start) => RaisedButton(child: Text('Good button example'), onPressed: start),
+      initialBuilder: (_, start) => TextButton(child: Text('Good button example'), onPressed: start),
       busyBuilder: (_) => CircularProgressIndicator(),
       dataBuilder: (_, data) => Text(data.toString()),
     );
@@ -76,9 +76,9 @@ class BadButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Futuristic<int>(
       futureBuilder: () => badFuture(1, 2),
-      initialBuilder: (_, start) => RaisedButton(child: Text('Bad button example'), onPressed: start),
-      busyBuilder: (_) => CircularProgressIndicator(),
-      errorBuilder: (_, error, retry) => RaisedButton(child: Text('Sorry! Try again'), onPressed: retry),
+      initialBuilder: (_, start) => TextButton(child: Text('Bad button example'), onPressed: start),
+      busyBuilder: (_) => const CircularProgressIndicator(),
+      errorBuilder: (_, error, retry) => TextButton(child: Text('Sorry! Try again'), onPressed: retry),
     );
   }
 }
@@ -112,21 +112,23 @@ class BadScreen extends StatelessWidget {
           autoStart: true,
           futureBuilder: () => badFuture(1, 2),
           busyBuilder: (_) => CircularProgressIndicator(),
-          onError: (error, retry) {
-            showDialog(
+          onError: (error, retry) async {
+            await showDialog(
               context: context,
-              child: AlertDialog(
-                content: Text('Sorry! Try again'),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('RETRY'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      retry();
-                    },
-                  )
-                ],
-              ),
+              builder: (innerContext) {
+                return AlertDialog(
+                  content: Text('Sorry! Try again'),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('RETRY'),
+                      onPressed: () {
+                        Navigator.of(innerContext).pop();
+                        retry();
+                      },
+                    )
+                  ],
+                );
+              },
             );
           },
         ),

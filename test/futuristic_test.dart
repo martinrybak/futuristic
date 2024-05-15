@@ -1,32 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:futuristic/futuristic.dart';
 
-// ignore_for_file: missing_required_param
-
 void main() {
-  group('Constructor', () {
-    testWidgets('throws assertion error if futureBuilder is null', (tester) async {
-      expect(() => Futuristic(), throwsAssertionError);
-    });
-
-    testWidgets('throws assertion error if autoStart is true and initialBuilder is not null', (tester) async {
-      expect(() => Futuristic(autoStart: true, initialBuilder: (_, __) => Container()), throwsAssertionError);
-    });
-
-    testWidgets('throws assertion error if autoStart is false and initialBuilder is null', (tester) async {
-      expect(() => Futuristic(autoStart: false), throwsAssertionError);
-    });
-  });
-
   group('Builders', () {
     testWidgets('initially shows initialBuilder', (tester) async {
-      final text = 'initial';
+      const text = 'initial';
       final widget = MaterialApp(
         home: Futuristic(
           futureBuilder: () => goodFuture(),
-          initialBuilder: (_, __) => Text(text),
+          initialBuilder: (_, __) => const Text(text),
         ),
       );
       await tester.pumpWidget(widget);
@@ -34,7 +17,7 @@ void main() {
     });
 
     testWidgets('shows busyBuilder after invoking start', (tester) async {
-      final text = 'busy';
+      const text = 'busy';
       final widget = MaterialApp(
         home: Futuristic(
           futureBuilder: () => goodFuture(),
@@ -42,7 +25,7 @@ void main() {
             WidgetsBinding.instance.addPostFrameCallback((_) => start());
             return Container();
           },
-          busyBuilder: (_) => Text(text),
+          busyBuilder: (_) => const Text(text),
         ),
       );
       await tester.pumpWidget(widget);
@@ -66,16 +49,16 @@ void main() {
     });
 
     testWidgets('shows dataBuilder after future completes successfully', (tester) async {
-      final text = '3';
+      const text = '3';
       final widget = MaterialApp(
-        home: Futuristic(
+        home: Futuristic<void>(
           futureBuilder: () => goodFuture(),
           initialBuilder: (_, start) {
             WidgetsBinding.instance.addPostFrameCallback((_) => start());
             return Container();
           },
-          busyBuilder: (_) => CircularProgressIndicator(),
-          dataBuilder: (_, data) => Text(text),
+          busyBuilder: (_) => const CircularProgressIndicator(),
+          dataBuilder: (_, data) => const Text(text),
         ),
       );
       await tester.pumpWidget(widget);
@@ -85,15 +68,15 @@ void main() {
     });
 
     testWidgets('shows initialBuilder after future completes successfully and dataBuilder is null', (tester) async {
-      final text = 'initial';
+      const text = 'initial';
       final widget = MaterialApp(
         home: Futuristic(
           futureBuilder: () => goodFuture(),
           initialBuilder: (_, start) {
             WidgetsBinding.instance.addPostFrameCallback((_) => start());
-            return Text(text);
+            return const Text(text);
           },
-          busyBuilder: (_) => CircularProgressIndicator(),
+          busyBuilder: (_) => const CircularProgressIndicator(),
         ),
       );
       await tester.pumpWidget(widget);
@@ -103,7 +86,7 @@ void main() {
     });
 
     testWidgets('shows errorBuilder after future fails with error', (tester) async {
-      final text = 'Something happened';
+      const text = 'Something happened';
       final widget = MaterialApp(
         home: Futuristic(
           futureBuilder: () => badFuture(text),
@@ -111,7 +94,7 @@ void main() {
             WidgetsBinding.instance.addPostFrameCallback((_) => start());
             return Container();
           },
-          busyBuilder: (_) => CircularProgressIndicator(),
+          busyBuilder: (_) => const CircularProgressIndicator(),
           errorBuilder: (_, e, __) => Text(e.toString()),
         ),
       );
@@ -122,15 +105,15 @@ void main() {
     });
 
     testWidgets('shows initialBuilder after future fails with error and errorBuilder is null', (tester) async {
-      final text = 'foo';
+      const text = 'foo';
       final widget = MaterialApp(
         home: Futuristic(
           futureBuilder: () => badFuture(text),
           initialBuilder: (_, start) {
             WidgetsBinding.instance.addPostFrameCallback((_) => start());
-            return Text(text);
+            return const Text(text);
           },
-          busyBuilder: (_) => CircularProgressIndicator(),
+          busyBuilder: (_) => const CircularProgressIndicator(),
         ),
       );
       await tester.pumpWidget(widget);
@@ -140,16 +123,16 @@ void main() {
     });
 
     testWidgets('invoking retry in errorBuilder restarts future', (tester) async {
-      final initial = 'initial';
-      final error = 'error';
+      const initial = 'initial';
+      const error = 'error';
       final widget = MaterialApp(
         home: Futuristic(
           futureBuilder: () => badFuture(error),
           initialBuilder: (_, start) {
             WidgetsBinding.instance.addPostFrameCallback((_) => start());
-            return Text(initial);
+            return const Text(initial);
           },
-          busyBuilder: (_) => CircularProgressIndicator(),
+          busyBuilder: (_) => const CircularProgressIndicator(),
           errorBuilder: (_, e, retry) {
             WidgetsBinding.instance.addPostFrameCallback((_) => retry());
             return Text(e.toString());
@@ -167,7 +150,7 @@ void main() {
 
   group('Callbacks', () {
     testWidgets('onDone called after future completes successfully', (tester) async {
-      final expected = 'data';
+      const expected = 'data';
       final widget = MaterialApp(
         home: Futuristic(
           futureBuilder: () => goodFuture(expected),
@@ -182,7 +165,7 @@ void main() {
     });
 
     testWidgets('onError called after future fails with error', (tester) async {
-      final expected = 'error';
+      const expected = 'error';
       final widget = MaterialApp(
         home: Futuristic(
           futureBuilder: () => badFuture(expected),
@@ -198,7 +181,7 @@ void main() {
   });
 }
 
-Future goodFuture([Object data]) async {
+Future goodFuture([Object? data]) async {
   return Future.value(data);
 }
 
