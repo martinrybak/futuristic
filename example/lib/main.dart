@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:futuristic/futuristic.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Home(),
+      home: const Home(),
       routes: {
-        GoodScreen.routeName: (_) => GoodScreen(),
-        BadScreen.routeName: (_) => BadScreen(),
+        GoodScreen.routeName: (_) => const GoodScreen(),
+        BadScreen.routeName: (_) => const BadScreen(),
       },
     );
   }
@@ -31,6 +33,8 @@ Future<int> badFuture(int first, int second) async {
 }
 
 class Home extends StatelessWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,16 +42,16 @@ class Home extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Container(height: 50, child: Center(child: GoodButton())),
-            Container(height: 50, child: Center(child: BadButton())),
+            const SizedBox(height: 50, child: Center(child: GoodButton())),
+            const SizedBox(height: 50, child: Center(child: BadButton())),
             TextButton(
-              child: Text('Good screen example'),
+              child: const Text('Good screen example'),
               onPressed: () {
                 Navigator.of(context).pushNamed(GoodScreen.routeName);
               },
             ),
             TextButton(
-              child: Text('Bad screen example'),
+              child: const Text('Bad screen example'),
               onPressed: () {
                 Navigator.of(context).pushNamed(BadScreen.routeName);
               },
@@ -60,40 +64,47 @@ class Home extends StatelessWidget {
 }
 
 class GoodButton extends StatelessWidget {
+  const GoodButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Futuristic<int>(
       futureBuilder: () => goodFuture(1, 2),
-      initialBuilder: (_, start) => TextButton(child: Text('Good button example'), onPressed: start),
-      busyBuilder: (_) => CircularProgressIndicator(),
+      initialBuilder: (_, start) => TextButton(onPressed: start, child: const Text('Good button example')),
+      busyBuilder: (_) => const CircularProgressIndicator(),
       dataBuilder: (_, data) => Text(data.toString()),
     );
   }
 }
 
 class BadButton extends StatelessWidget {
+  const BadButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Futuristic<int>(
       futureBuilder: () => badFuture(1, 2),
-      initialBuilder: (_, start) => TextButton(child: Text('Bad button example'), onPressed: start),
+      initialBuilder: (_, start) => TextButton(onPressed: start, child: const Text('Bad button example')),
       busyBuilder: (_) => const CircularProgressIndicator(),
-      errorBuilder: (_, error, retry) => TextButton(child: Text('Sorry! Try again'), onPressed: retry),
+      errorBuilder: (_, error, retry) => TextButton(onPressed: retry, child: const Text('Sorry! Try again')),
     );
   }
 }
 
 class GoodScreen extends StatelessWidget {
   static const routeName = '/good';
+
+  const GoodScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Good screen')),
+      appBar: AppBar(title: const Text('Good screen')),
       body: Center(
         child: Futuristic<int>(
           autoStart: true,
           futureBuilder: () => goodFuture(1, 2),
-          busyBuilder: (_) => CircularProgressIndicator(),
+          busyBuilder: (_) => const CircularProgressIndicator(),
           dataBuilder: (_, data) => Text('Data is $data'),
         ),
       ),
@@ -103,24 +114,27 @@ class GoodScreen extends StatelessWidget {
 
 class BadScreen extends StatelessWidget {
   static const routeName = '/bad';
+
+  const BadScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Bad screen')),
+      appBar: AppBar(title: const Text('Bad screen')),
       body: Center(
         child: Futuristic<int>(
           autoStart: true,
           futureBuilder: () => badFuture(1, 2),
-          busyBuilder: (_) => CircularProgressIndicator(),
+          busyBuilder: (_) => const CircularProgressIndicator(),
           onError: (error, retry) async {
             await showDialog(
               context: context,
               builder: (innerContext) {
                 return AlertDialog(
-                  content: Text('Sorry! Try again'),
+                  content: const Text('Sorry! Try again'),
                   actions: <Widget>[
                     TextButton(
-                      child: Text('RETRY'),
+                      child: const Text('RETRY'),
                       onPressed: () {
                         Navigator.of(innerContext).pop();
                         retry();
