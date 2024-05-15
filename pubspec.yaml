@@ -1,11 +1,10 @@
 name: futuristic
 description: Makes it possible to safely execute and retry a Future inside a StatelessWidget.
-version: 0.1.3
-author: Martin Rybak <martin.rybak@gmail.com>
-homepage: https://github.com/vgventures/futuristic
+version: 0.2.0
+homepage: https://github.com/martinrybak/futuristic
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -14,7 +13,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pedantic: ^1.9.0                  # Static analysis rules
+  flutter_lints: ^4.0.0                     # Static analysis rules
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
